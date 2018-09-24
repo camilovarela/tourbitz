@@ -75,6 +75,6 @@ while process:
 				
 				time.sleep(10)
 			except Exception:
-				fail = True
+				break
 browser.quit()
 detail.quit()
