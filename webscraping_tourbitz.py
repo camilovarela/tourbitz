@@ -29,30 +29,31 @@ try:
 except TimeoutException:
     print("Timed out!")
 
-try:
+
+element = browser.find_element_by_xpath("//div[@class='activities-show-more load-more']")
+process = True
+
+while process:
+
+	browser.execute_script("arguments[0].click();", element)
+	browser.execute_script("arguments[0].scrollIntoView();", element)
+	
+	time.sleep(0.6)
+	
 	element = browser.find_element_by_xpath("//div[@class='activities-show-more load-more']")
-	process = True
-
-	while process:
-
-		browser.execute_script("arguments[0].click();", element)
-		browser.execute_script("arguments[0].scrollIntoView();", element)
+	child = browser.find_element_by_xpath("//span[@class='btn btn-cta btn-small']")
+	
+	if child.get_attribute("style") == 'display: none;':
+	
+		process = False
 		
-		time.sleep(0.6)
+		# find_elements_by_xpath - Returns an array of selenium objects.
+		articles_element = browser.find_elements_by_xpath("//a[@class='activity-card-link']")
 		
-		element = browser.find_element_by_xpath("//div[@class='activities-show-more load-more']")
-		child = browser.find_element_by_xpath("//span[@class='btn btn-cta btn-small']")
-		
-		if child.get_attribute("style") == 'display: none;':
-		
-			process = False
+		step = 1
+		for article in articles_element:
 			
-			# find_elements_by_xpath - Returns an array of selenium objects.
-			articles_element = browser.find_elements_by_xpath("//a[@class='activity-card-link']")
-			
-			step = 1
-			for article in articles_element:
-				
+			try:
 				# Go to detail page
 				detail.get("" + article.get_attribute("href"))
 				
@@ -74,8 +75,8 @@ try:
 				print(jsonStr)
 				
 				time.sleep(10)
-except TimeoutException:
-	fail = True
+			except Exception:
+				break
 
 browser.quit()
 detail.quit()

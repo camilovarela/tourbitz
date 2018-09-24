@@ -39,9 +39,13 @@ public class TourWebScraping {
       List<TourPlanInformation> tours = new ArrayList<>();
       while ((tourPlan = in.readLine()) != null) {
 
-        TourPlanInformation planInformation =
-            this.gson.fromJson(tourPlan, TourPlanInformation.class);
-        tours.add(planInformation);
+        try {
+          TourPlanInformation planInformation =
+              this.gson.fromJson(tourPlan, TourPlanInformation.class);
+          tours.add(planInformation);
+        } catch (Exception e) {
+          // TODO: handle exception
+        }
       }
       this.tourPlanService.addTourPlan(searchText, tours);
     } catch (Exception e) {
