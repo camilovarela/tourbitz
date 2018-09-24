@@ -25,6 +25,8 @@ Este endpoint se conecta a la página web asociada al {tour}. Para efectos de es
 
 Los tours extraídos de la página se almacenan en el servidor donde está alojada la aplicación. Y se dejan disponibles para posteriores consultas.
 
+Nota. La extracción puede tardarse un poco (depende de la cantidad de resultados encontrados), y como estrategia para evitar el bloqueo de la IP por múltiples peticiones desde el mismo origen, hay un delay de 6 segundos entre la consulta de detalle de cada uno de los tours a consultar.
+
 * [GET] /tour-api/rest/v1.0/tours/{search-key}
 
 Mediante este endpoint es posible consultar los tours extraídos mediante el endpoint anterior.
