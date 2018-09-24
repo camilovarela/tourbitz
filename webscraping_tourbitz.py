@@ -13,7 +13,9 @@ class TourPlan:
 
 # Specifying incognito mode as you launch your browser[OPTIONAL]
 option = webdriver.ChromeOptions()
-option.add_argument("--incognito")
+option.add_argument('--headless')
+option.add_argument('--no-sandbox')
+option.add_argument('--disable-dev-shm-usage')
 
 # Create new Instance of Chrome in incognito mode
 browser = webdriver.Chrome(executable_path='chromedriver', chrome_options=option)
@@ -53,32 +55,26 @@ while process:
 			# Go to detail page
 			detail.get("" + article.get_attribute("href"))
 			
-			about_list = detail.find_elements_by_xpath("//div[contains(@class, 'keydetails-benefit key-details-item')]//div[contains(@class, 'label')]")
-			
-			tour = TourPlan()
-			tour.title = detail.find_element_by_xpath("//h1[@class='activity-title']").text
-			tour.overview = detail.find_element_by_xpath("//section[@class='overview long-txt']//div[@class='content']").text
-			tour.price = detail.find_element_by_xpath("//p[contains(@class, 'price')]//strong[@class='price-actual']").text
-			
 			try:
+				about_list = detail.find_elements_by_xpath("//div[contains(@class, 'keydetails-benefit key-details-item')]//div[contains(@class, 'label')]")
+				
+				tour = TourPlan()
+				tour.title = detail.find_element_by_xpath("//h1[@class='activity-title']").text
+				tour.overview = detail.find_element_by_xpath("//section[@class='overview long-txt']//div[@class='content']").text
+				tour.price = detail.find_element_by_xpath("//p[contains(@class, 'price')]//strong[@class='price-actual']").text
 				tour.image = detail.find_element_by_xpath("//div[@class='activity-header-image-contain']").get_attribute("data-background")
+			
+				jsonStr = '{"title":"' + tour.title + '", "overview":"' + tour.overview + '", "price":"' + tour.price + '", "image":"' + tour.image + '", "about":['
+				
+				for i in range(1, len(about_list)):
+					if i > 1:
+						jsonStr = jsonStr + ','
+					jsonStr = jsonStr + '"' + about_list[i].text + '"'
+				jsonStr = jsonStr + ']}'
+				print(jsonStr)
+				
+				time.sleep(10)
 			except Exception:
-				tour.image = "Not found"
 			
-			jsonStr = '{"title":"' + tour.title + '", "overview":"' + tour.overview + '", "price":"' + tour.price + '", "image":"' + tour.image + '", "about":['
-			
-			for i in range(1, len(about_list)):
-				if i > 1:
-					jsonStr = jsonStr + ','
-				jsonStr = jsonStr + '"' + about_list[i].text + '"'
-			jsonStr = jsonStr + ']}'
-			print(jsonStr)
-			
-			if step % 3 == 0:
-				time.sleep(8)
-			else:
-				time.sleep(1)
-			step = step + 1
-
 browser.quit()
 detail.quit()
