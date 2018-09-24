@@ -32,7 +32,7 @@ public class TourWebScraping {
 
     try {
 
-      Process p = Runtime.getRuntime().exec(String.format("py D:\\projects\\tourbitz\\%s %s", scriptName, searchText));
+      Process p = Runtime.getRuntime().exec(String.format("py /home/cvarela/dev/tourbitz/%s %s", scriptName, searchText));
       BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
       String tourPlan;
